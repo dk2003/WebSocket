@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 50px;
+            /* height: 200px; */
+            border: 1px solid #000000;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            -webkit-box-orient: vertical;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="text" placeholder="输入你的内容" id='info'>
+    <button id="send">发送请求</button>
+    <button id="close">关闭连接</button>
+    <!-- 显示结果 -->
+    <div id='res'>
+    </div>
+    <script>
+
+        // 演示websocket在浏览器端的使用
+        let result = document.getElementById('res');
+        let send = document.getElementById('send');
+        let info = document.getElementById('info');
+        let end = document.getElementById('close');
+
+        // 1. 创建WebSocket服务
+        // 参数1，url：websocket的服务地址
+        var socket = new WebSocket('ws://localhost:3000');
+
+        // 2. 当websocket服务连接的时候就会触发open事件
+        socket.addEventListener('open', () => {
+            result.innerText = '连接服务成功了';
+        })
+        socket.addEventListener('error', () => {
+            result.innerText = '连接服务出错了';
+        })
+        socket.addEventListener('message', (response) => {
+            result.innerText = response.data;
+        })
+        socket.addEventListener('close', () => {
+            result.innerText = '连接关闭了';
+        })
+
+        // 点击按钮发送websocket消息
+        send.onclick = () => {
+            socket.send(info.value);
+            console.log('向服务器发送了数据'+info.value);
+        }
+        end.onclick = () => {
+            socket.close();
+        }
+
+
+
+    </script>
+</body>
+
+</html>
